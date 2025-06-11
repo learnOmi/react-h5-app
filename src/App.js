@@ -1,7 +1,10 @@
+import { Button } from "antd-mobile";
+
 function App() {
   return (
     <div className="App">
-      APP
+      dfd 
+      <Button type="primary" onClick={() => alert('324234')}>dfd</Button>
     </div>
   );
 }

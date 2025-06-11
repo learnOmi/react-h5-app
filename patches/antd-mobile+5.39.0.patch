@@ -1,0 +1,61 @@
+diff --git a/node_modules/antd-mobile/es/components/popover/wrapper.js b/node_modules/antd-mobile/es/components/popover/wrapper.js
+index 697d825..55eb129 100644
+--- a/node_modules/antd-mobile/es/components/popover/wrapper.js
++++ b/node_modules/antd-mobile/es/components/popover/wrapper.js
+@@ -1,23 +1,48 @@
+ import React from 'react';
+-import { findDOMNode } from 'react-dom';
++
+ export class Wrapper extends React.Component {
+-  constructor() {
+-    super(...arguments);
++  constructor(props) {
++    super(props);
+     this.element = null;
++    // 创建 ref 来引用子元素
++    this.childRef = React.createRef();
+   }
++
+   componentDidMount() {
+-    this.componentDidUpdate();
++    this.updateElement();
+   }
++
+   componentDidUpdate() {
+-    // eslint-disable-next-line
+-    const node = findDOMNode(this);
++    this.updateElement();
++  }
++
++  updateElement() {
++    // 直接通过 ref 获取 DOM 节点
++    const node = this.childRef.current;
++    
+     if (node instanceof Element) {
+       this.element = node;
+     } else {
+       this.element = null;
+     }
+   }
++
+   render() {
+-    return React.Children.only(this.props.children);
++    // 克隆子元素并附加 ref
++    const child = React.Children.only(this.props.children);
++    
++    return React.cloneElement(child, {
++      ref: (el) => {
++        // 保存到 ref
++        this.childRef.current = el;
++        
++        // 如果子元素已有 ref，调用它（支持多个 ref）
++        if (typeof child.ref === 'function') {
++          child.ref(el);
++        } else if (child.ref && child.ref.current !== null) {
++          child.ref.current = el;
++        }
++      }
++    });
+   }
+ }
+\ No newline at end of file
