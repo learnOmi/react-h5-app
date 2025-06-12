@@ -1,8 +1,18 @@
-const { override, fixBabelImports } = require('customize-cra');
+const { override, fixBabelImports, addWebpackAlias } = require('customize-cra');
+const path = require('path');
+
+const babelPlugin = fixBabelImports('import', {
+    libraryName: 'antd',
+    libraryDirectory: "es/components",
+    style: false
+})
+
+const webPackAlias = addWebpackAlias({
+    '@': path.resolve(__dirname, 'src'),
+    '@scss': path.resolve(__dirname, 'src','assets', 'styles')
+})
 
 module.exports = override(
-    fixBabelImports('import', {
-        libraryName: 'antd',
-        style: 'css'
-    })
+    babelPlugin,
+    webPackAlias
 );
