@@ -6,21 +6,21 @@ const IconProps = z.object({
 });
 
 function Icon(props) {
-  const iconProps = IconProps.safeParse(props);
+  const{type, className , ...rest} = props;
+  const iconProps = IconProps.safeParse({type});
   if(!iconProps.success){
     console.error('Props 错误:', iconProps.error);
     return <div>Invalid props</div>;
   }
 
-  const { type, className, ...rest } = iconProps.data;
-
   return (
-    <svg 
-        {...rest}
-        className={classNames('icon', className)} 
-        aria-hidden="true">
-        <use xlinkHref={`#${type}`}></use>
-    </svg>
+      <svg 
+          {...rest}
+          className={classNames('icon', className)} 
+          aria-hidden="true">
+          <use xlinkHref={`#${type}`}></use>
+      </svg>
+
   )
 }
 

@@ -1,9 +1,11 @@
-import Icon from "@/components/Icon"
+import NavBar from "@/components/NavBar"
 
 export default function Home() {
   return (
     <div>
-      <Icon type='icon-lishi' />
+      <NavBar extra="点击">
+        首页
+      </NavBar>
     </div>
   )
 }
