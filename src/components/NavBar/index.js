@@ -21,7 +21,6 @@ function NavBar({children, extra}) {
                 {children}
             </div>
             <div className="right">
-                <button  onClick={()=>navigate('/login')}>ff</button>
                 {extra}
             </div>
         </div>
