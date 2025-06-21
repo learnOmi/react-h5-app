@@ -11,10 +11,24 @@ export default function Login() {
     },
     onSubmit: values =>{
       console.log(values);
+    },
+    validate: values => {
+      const errors = {};
+      if (!values.mobile) {
+        errors.mobile = '请输入手机号';
+      } else if (!/^1[3-9]\d{9}$/.test(values.mobile)) {
+        errors.mobile = '手机号格式不正确';
+      }
+      if (!values.code) {
+        errors.code = '请输入验证码';
+      } else if (!/^\d{6}$/.test(values.code)) {
+        errors.code = '验证码格式不正确';
+      }
+      return errors;
     }
   })
 
-  const {values:{mobile, code}, handleChange, handleSubmit} = formik;
+  const {values:{mobile, code}, handleChange, handleBlur, handleSubmit, errors, touched} = formik;
 
   return (
     <div className={styles.root}>
@@ -25,12 +39,20 @@ export default function Login() {
         <h3>验证码登录</h3>
         <form onSubmit={handleSubmit}>
           <div className="input-item">
-            <Input name='mobile' onChange={handleChange} value={mobile} placeholder='用户名' type="text"></Input>
-            {/* <div className="validate">验证</div> */}
+            <Input name='mobile' onChange={handleChange} onBlur={handleBlur}
+              value={mobile} placeholder='用户名' type="text"
+              autoComplete='off'></Input>
+              {
+                errors.mobile && touched.mobile && <div className="validate">{errors.mobile}</div>
+              }
           </div>
           <div className="input-item">
-            <Input name='code' onChange={handleChange} value={code} placeholder='密码' type="text" extra="发送验证码"></Input>         
-            {/* <div className="validate">验证</div> */}
+            <Input name='code' onChange={handleChange} onBlur={handleBlur}
+              value={code} placeholder='密码' type="text" 
+              extra="发送验证码" autoComplete='off'></Input>         
+              {
+                errors.code && touched.code && <div className="validate">{errors.code}</div>
+              }
           </div>
           <button className="login-btn">登录</button>
         </form>
