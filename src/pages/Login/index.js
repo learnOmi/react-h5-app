@@ -2,6 +2,7 @@ import NavBar from "@/components/NavBar"
 import styles from './index.module.scss';
 import Input from "@/components/Input";
 import { useFormik } from "formik";
+import * as Yup from 'yup';
 
 export default function Login() {
   const formik = useFormik({
@@ -12,20 +13,10 @@ export default function Login() {
     onSubmit: values =>{
       console.log(values);
     },
-    validate: values => {
-      const errors = {};
-      if (!values.mobile) {
-        errors.mobile = '请输入手机号';
-      } else if (!/^1[3-9]\d{9}$/.test(values.mobile)) {
-        errors.mobile = '手机号格式不正确';
-      }
-      if (!values.code) {
-        errors.code = '请输入验证码';
-      } else if (!/^\d{6}$/.test(values.code)) {
-        errors.code = '验证码格式不正确';
-      }
-      return errors;
-    }
+    validationSchema: Yup.object({
+      mobile: Yup.string().required('请输入手机号').matches(/^1[3-9]\d{9}$/, '手机号格式不正确'),
+      code: Yup.string().required('请输入验证码').matches(/^\d{6}$/, '验证码格式不正确')
+    })
   })
 
   const {values:{mobile, code}, handleChange, handleBlur, handleSubmit, errors, touched} = formik;
