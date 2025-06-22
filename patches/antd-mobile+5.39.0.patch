@@ -59,3 +59,88 @@ index 697d825..55eb129 100644
    }
  }
 \ No newline at end of file
+diff --git a/node_modules/antd-mobile/es/utils/render.js b/node_modules/antd-mobile/es/utils/render.js
+index a478223..9534bfa 100644
+--- a/node_modules/antd-mobile/es/utils/render.js
++++ b/node_modules/antd-mobile/es/utils/render.js
+@@ -1,5 +1,6 @@
+ import { __awaiter } from "tslib";
+ import * as ReactDOM from 'react-dom';
++import * as ReactDOMClient from 'react-dom/client'; // 添加 React 19 支持
+ // Let compiler not to search module usage
+ const fullClone = Object.assign({}, ReactDOM);
+ const {
+@@ -8,12 +9,18 @@ const {
+   unmountComponentAtNode
+ } = fullClone;
+ let createRoot;
++let isReact19 = false;
+ try {
+   const mainVersion = Number((version || '').split('.')[0]);
+   if (mainVersion >= 18 && fullClone.createRoot) {
+     // eslint-disable-next-line @typescript-eslint/no-var-requires
+     createRoot = fullClone.createRoot;
+   }
++  if (mainVersion >= 19) {
++    isReact19 = true;
++    createRoot = ReactDOMClient.createRoot;
++    hydrateRoot = ReactDOMClient.hydrateRoot;
++  }
+ } catch (e) {
+   // Do nothing;
+ }
+@@ -27,14 +34,29 @@ function toggleWarning(skip) {
+ }
+ const MARK = '__antd_mobile_root__';
+ function legacyRender(node, container) {
+-  reactRender(node, container);
++  if (isReact19) {
++    const root = createRoot(container);
++    root.render(node);
++    container[MARK] = root;
++  } else {
++    reactRender(node, container);
++  }
+ }
+ function concurrentRender(node, container) {
+   toggleWarning(true);
+-  const root = container[MARK] || createRoot(container);
++  if (isReact19) {
++    // React 19 专用逻辑
++    const root = container[MARK] || createRoot(container);
++    root.render(node);
++    container[MARK] = root;
++  } else {
++    // React 18 逻辑
++    const root = container[MARK] || createRoot(container);
++    root.render(node);
++    container[MARK] = root;
++  }
++  
+   toggleWarning(false);
+-  root.render(node);
+-  container[MARK] = root;
+ }
+ export function render(node, container) {
+   if (createRoot) {
+@@ -58,8 +80,16 @@ function concurrentUnmount(container) {
+   });
+ }
+ export function unmount(container) {
+-  if (createRoot) {
+-    return concurrentUnmount(container);
++  if (isReact19) {
++    const root = container[MARK];
++    if (root) {
++      root.unmount();
++      delete container[MARK];
++    }
++  } else if (unmountComponentAtNode) {
++    unmountComponentAtNode(container);
++    if (container[MARK]) {
++      delete container[MARK];
++    }
+   }
+-  return legacyUnmount(container);
+ }
+\ No newline at end of file
