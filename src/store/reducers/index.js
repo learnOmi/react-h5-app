@@ -1,16 +1,8 @@
 import { combineReducers } from 'redux'
-
-const testReducer = (state = 0, action) => {
-    return state;
-}
-
-const userReducer = (state = {name:'ddd'}, action) => {
-    return state;
-}
+import loginReducer from './login'
 
 const reducers = combineReducers({
-    test:testReducer,
-    user:userReducer
+    loginReducer,
 })
 
 export default reducers;
