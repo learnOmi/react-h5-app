@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { setToken } from '@/utils/storage'
 
 const sendCode = (mobile) => {
     return async () => {
@@ -22,6 +23,9 @@ const login = (params) => {
         });
 
         dispatch(saveToke(res.data));
+
+        // 保存到本地，提供给redux作为刷新时的初始值，因为页面刷新redux中会丢失
+        setToken(res.data);
     }
 }
 

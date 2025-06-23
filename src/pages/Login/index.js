@@ -8,12 +8,15 @@ import { login, sendCode } from "@/store/actions/login";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { Toast } from "antd-mobile";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [time, setTime] = useState(0);
   // 全局变量timerRef的方式会导致同一个组件多次渲染时，所有的同一个组件多次渲染的定时器都受到影响
   //const timerRef = useRef(null);
   const dispatch = useDispatch();
+
   const onExtraClick = async () => {
     if (time > 0) return;
     if (!/^1[3-9]\d{9}$/.test(mobile)) {
@@ -68,6 +71,7 @@ export default function Login() {
           content: 'login successfully!',
           duration: 1000 
         });
+        navigate('/home');
       }catch(e){
         Toast.show({
           content: e.message,
@@ -109,7 +113,7 @@ export default function Login() {
               errors.code && touched.code && <div className="validate">{errors.code}</div>
             }
           </div>
-          <button className={classNames('login-btn', { disabled: !isValid })} disabled={!isValid}>登录</button>
+          <button type="submit" className={classNames('login-btn', { disabled: !isValid })} disabled={!isValid}>登录</button>
         </form>
       </div>
     </div>
