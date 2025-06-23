@@ -7,8 +7,12 @@ import classNames from 'classnames';
 import { sendCode } from "@/store/actions/sendCode";
 import { useDispatch } from "react-redux";
 import { Toast } from "antd-mobile";
+import {  useRef, useState } from "react";
 
 export default function Login() {
+  const [time, setTime] = useState(0);
+  // 全局变量timerRef的方式会导致同一个组件多次渲染时，所有的同一个组件多次渲染的定时器都受到影响
+  //const timerRef = useRef(null);
   const dispatch = useDispatch();
   const onExtraClick = async () => {
     if (!/^1[3-9]\d{9}$/.test(mobile)){
@@ -24,6 +28,18 @@ export default function Login() {
         icon: 'success',
         duration: 1000
       });
+      setTime(5);
+      //timerRef = setInterval(()=>{
+      let timer = setInterval(()=>{
+          //区别于setTime(time-1)中的time是当时闭包中的值，就是0；每次结果都是设置time为-1；
+          //而setTime(t => t - 1)中的t是每次time最新的值（React 将最新的 state 通过参数传给回调函数），第一次是5，第二次是4，……
+          setTime( t =>{
+            if(t === 0){
+              clearInterval(timer);
+            }
+            return t - 1
+          });
+      }, 1000);
     }catch(e){
       Toast.show({
         content: e.message,
@@ -33,10 +49,16 @@ export default function Login() {
     }
   }
 
+  // useEffect(()=>{
+  //   if(time === 0){
+  //     clearInterval(timerRef.current);
+  //   }
+  // },[time]);
+
   const formik = useFormik({
     initialValues: {
-      mobile: '',
-      code: ''
+      mobile: '13123456789',
+      code: '246810'
     },
     onSubmit: values =>{
       console.log(values);
@@ -68,7 +90,7 @@ export default function Login() {
           <div className="input-item">
             <Input name='code' onChange={handleChange} onBlur={handleBlur}
               value={code} placeholder='密码' type="text" 
-              extra="发送验证码" onExtraClick={onExtraClick} autoComplete='off'></Input>         
+              extra={time === 0 ? "发送验证码" : time + "s后获取" } onExtraClick={onExtraClick} autoComplete='off'></Input>         
               {
                 errors.code && touched.code && <div className="validate">{errors.code}</div>
               }
