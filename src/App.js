@@ -11,7 +11,11 @@ function App() {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/home" element={<Home />}></Route>
+          <Route path="/home" element={<Home />}>
+            <Route path="question" element={<div>Question</div>}></Route>
+            <Route path="video" element={<div>Video</div>}></Route>
+            <Route path="my" element={<div>My</div>}></Route>
+          </Route>
           <Route path="/login" element={<Login />}></Route>
         </Routes>
       </Suspense>
