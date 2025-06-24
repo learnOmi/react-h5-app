@@ -22,6 +22,7 @@ const login = (params) => {
             data: params
         });
 
+        // 保存到redux中，是为了响应式
         dispatch(saveToke(res.data));
 
         // 保存到本地，提供给redux作为刷新时的初始值，因为页面刷新redux中会丢失
