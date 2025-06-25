@@ -19,7 +19,7 @@ service.interceptors.request.use(
                 });
                 throw new Error('Token expired');
             } else {
-                config.headers.Authorization = `Bearer ${getToken()}`;
+                config.headers.Authorization = `Bearer ${getToken().token}`;
             }
         }
         return config;
@@ -31,11 +31,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-        Toast.show({
-            content: response.data.message,
-            icon: 'success',
-            duration: 1000
-        });
         return response.data;
     },
     error => {
@@ -60,7 +55,7 @@ service.interceptors.response.use(
                 duration: 1000
             });
         }
-        return Promise.reject(new Error(error.message))
+        return Promise.reject(error)
     }
 )
 

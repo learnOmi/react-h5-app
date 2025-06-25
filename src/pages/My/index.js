@@ -1,17 +1,30 @@
 import Icon from '@/components/Icon'
 import { Link } from 'react-router-dom'
 import styles from './index.module.scss'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getProfile } from '@/store/actions/profile'
+import { Toast } from 'antd-mobile'
 
 
 const Profile = () => {
-  const user = {
-    name: '张三',
-    photo: 'https://example.com/avatar.jpg',
-    art_count: 5,
-    follow_count: 10,
-    fans_count: 20,
-    like_count: 15
-  }
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.profile.user);
+  useEffect(()=>{
+    const fetchProfile = async () => {
+      try {
+        await dispatch(getProfile()); // 等待 Promise； 以防异步catch不到error
+      } catch (error) {
+        Toast.show({
+          content: error.message,
+          duration: 1000,
+          position: 'bottom'
+        });
+      }
+    };
+    
+    fetchProfile();
+  }, [dispatch]);
 
   return (
     <div className={styles.root}>

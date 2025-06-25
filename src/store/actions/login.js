@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { setToken } from '@/utils/storage'
+import LOGIN_TYPE from '../action_types/login'
 
 const sendCode = (mobile) => {
     return async () => {
@@ -9,7 +10,7 @@ const sendCode = (mobile) => {
 
 const saveToke = (data) => {
     return {
-        type: "login/token",
+        type: LOGIN_TYPE.LOGIN_TOKEN,
         payload: data
     }
 }

@@ -8,7 +8,7 @@ const store = legacy_createStore(
     rootReducer, 
     // 初始值
     {
-        login: hasToken() ? getToken() : {}
+        login: hasToken() ? getToken() : {},
     },
     composeWithDevTools(applyMiddleware(thunk)));
 
