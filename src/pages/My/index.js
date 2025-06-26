@@ -35,7 +35,7 @@ const Profile = () => {
             <img src={user.photo} alt="" />
           </div>
           <div className="user-name">{user.name}</div>
-          <Link to="/">
+          <Link to="/my/profile-edit">
             个人信息 <Icon type="icon-line_chevron_left" />
           </Link>
         </div>
