@@ -1,13 +1,36 @@
-import React from 'react'
-import { DatePicker, List } from 'antd-mobile'
-import { NavBar } from 'antd-mobile'
+import React, { useEffect } from 'react'
+import { DatePicker, List, Toast } from 'antd-mobile'
+import NavBar from '@/components/NavBar'
 import styles from './index.module.scss'
 import dayjs from 'dayjs'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserInfo, updUserInfo } from '@/store/actions/profile'
+import classNames from 'classnames'
+import { data } from 'react-router-dom'
 
 export default function ProfileEdit() {
     const [visible, setVisible] = useState(false);
-    const [birthDate, setBirthDate] = useState(new Date());
+
+    const dispatch = useDispatch();
+    // 避免返回undefined
+    const userInfo = useSelector((state) => state.profile?.profile || {});
+    useEffect(() => {
+        //useEffect的刷新时机是在页面和变量加载完后，如果这之前抛出错误，不会执行useEffect
+        const fetchUserInfo = async () => {
+            try {
+                await dispatch(getUserInfo());
+            } catch (e) {
+                Toast.show({
+                    content: e.message,
+                    duration: 1000,
+                    position: 'bottom'
+                });
+            }
+        }
+
+        fetchUserInfo();
+    }, [dispatch]);
 
     return (
         <div className={styles.root}>
@@ -18,17 +41,17 @@ export default function ProfileEdit() {
                 <List className="profile-list">
                     <List.Item extra={
                         <span className="avatar-wrapper">
-                            <img src="" alt="" />
+                            <img src={userInfo.photo} alt="" />
                         </span>
                     }
                         onClick={() => { }}>
                         头像
                     </List.Item>
-                    <List.Item extra={"name"} onClick={() => { }}>
+                    <List.Item extra={userInfo.name} onClick={() => { }}>
                         昵称
                     </List.Item>
                     <List.Item extra={
-                        <span className="intro">{'未填写'}</span>
+                        <span className={classNames('intro', { normal:!!userInfo.intro })}>{userInfo.intro ? userInfo.intro : '未填写'}</span>
                     }
                         onClick={() => { }}
                     >
@@ -37,10 +60,10 @@ export default function ProfileEdit() {
                 </List>
                 <div className="profile-list">
                     <List>
-                        <List.Item extra={'男'} onClick={() => { }}>
+                        <List.Item extra={ userInfo.gender === 0 ? '男' : '女' } onClick={() => { }}>
                             性别
                         </List.Item>
-                        <List.Item extra={dayjs(birthDate).format('YYYY-MM-DD')}
+                        <List.Item extra={dayjs(new Date(userInfo.birthday)).format('YYYY-MM-DD')}
                             onClick={() => setVisible(!visible)}>
                             生日
                         </List.Item>
@@ -51,7 +74,7 @@ export default function ProfileEdit() {
                             min={new Date(1900, 1, 1, 0, 0, 0)}
                             max={new Date()}
                             onCancel={() => setVisible(!visible)}
-                            onConfirm={(date) => { setBirthDate(date); setVisible(!visible) }}
+                            onConfirm={(date) => { dispatch(updUserInfo({birthday: dayjs(new Date(date)).format('YYYY-MM-DD')})); setVisible(!visible) }}
                         />
                     </List>
                 </div>

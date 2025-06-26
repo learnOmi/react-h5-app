@@ -9,8 +9,24 @@ export default function reducer(state = initValues, actions){
     if(type === PROFILE_TYPE.SAVE_USER){
         return {
             ...state,
-            user:payload
+            user: payload
         }
     }
+
+    if(type === PROFILE_TYPE.SAVE_USERINFO){
+        return{
+            ...state,
+            profile: payload
+        }
+    }
+
+    if(type === PROFILE_TYPE.UPD_REDUX_USERINFO){
+        const { profile } = state;
+        state.profile = {
+            ...profile,
+            ...payload
+        };
+    }
+
     return state;
 }
