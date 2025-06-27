@@ -1,17 +1,20 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { DatePicker, List, Toast, Popup } from 'antd-mobile'
 import NavBar from '@/components/NavBar'
 import styles from './index.module.scss'
 import dayjs from 'dayjs'
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserInfo, updUserInfo } from '@/store/actions/profile'
 import classNames from 'classnames'
 import EditInput from './EditInput'
 
+
 export default function ProfileEdit() {
     const [visibleOfDate, setVisibleOfDate] = useState(false);
-    const [visibleOfPop, setVisibleOfPop] = useState(false);
+    const [visibleOfPop, setVisibleOfPop] = useState({
+        isVisible: false,
+        type: ''
+    });
 
     const containerRef = useRef(null);
     const dispatch = useDispatch();
@@ -50,13 +53,13 @@ export default function ProfileEdit() {
                             onClick={() => { }}>
                             头像
                         </List.Item>
-                        <List.Item extra={userInfo.name} onClick={() => { setVisibleOfPop(!visibleOfPop) }}>
+                        <List.Item extra={userInfo.name} onClick={() => { setVisibleOfPop({isVisible:!visibleOfPop.isVisible, type:'name'}) }}>
                             昵称
                         </List.Item>
                         <List.Item extra={
                             <span className={classNames('intro', { normal: !!userInfo.intro })}>{userInfo.intro ? userInfo.intro : '未填写'}</span>
                         }
-                            onClick={() => { }}
+                            onClick={() => { setVisibleOfPop({isVisible:!visibleOfPop.isVisible, type:'intro'}) }}
                         >
                             简介
                         </List.Item>
@@ -88,7 +91,7 @@ export default function ProfileEdit() {
                 </div>
             </div>
             <Popup
-                visible={visibleOfPop}
+                visible={visibleOfPop.isVisible}
                 position='right'
                 mask={false}
                 // Ant Design Mobile 的 Popup 组件默认会使用 Portal 将内容渲染到 body 元素下，而不是直接在父容器中；
@@ -96,7 +99,7 @@ export default function ProfileEdit() {
                 // 从而能够让 index.module.scss 中的 .adm-popup-body 样式生效
                 getContainer={containerRef.current}
             >
-                <EditInput onLeftArrowClick={()=>{setVisibleOfPop(!visibleOfPop)}}/>
+                <EditInput type={visibleOfPop.type} onLeftArrowClick={()=>{setVisibleOfPop({...visibleOfPop,isVisible:!visibleOfPop.isVisible});}}/>
             </Popup>
         </div>
     )
