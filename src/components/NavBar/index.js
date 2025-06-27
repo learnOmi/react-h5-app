@@ -2,13 +2,17 @@ import Icon from "@/components/Icon";
 import styles from './index.module.scss';
 import { useNavigate } from "react-router-dom";
  
-function NavBar({children, extra}) {
+function NavBar({children, onLeftArrowClick, extra}) {
     const navigate = useNavigate();
     const back = () => {
-        if (window.history.length > 1) {
-            navigate(-1);
-        } else {
-            navigate('/');
+        if(onLeftArrowClick){
+            onLeftArrowClick();
+        }else{
+            if (window.history.length > 1) {
+                navigate(-1);
+            } else {
+                navigate('/');
+            }
         }
     }
 
