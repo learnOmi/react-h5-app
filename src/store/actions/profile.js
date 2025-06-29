@@ -42,7 +42,7 @@ const updReduxUserInfo = (params) => {
 
 const updUserInfo = (params) => {
     return async dispatch => {
-        const res = await request.patch('/user/profile', params)
+        const res = await request.patch('/user/profile', params);
         if(res.message === 'OK'){
             dispatch(updReduxUserInfo(params));
             return res;
@@ -50,4 +50,12 @@ const updUserInfo = (params) => {
     }
 }
 
-export { getProfile, getUserInfo, updUserInfo }
+const updUserPhoto = (params) => {
+    return async dispatch => {
+        const res = await request.patch('/user/photo', params);
+        dispatch(getUserInfo());
+        return res;
+    }
+}
+
+export { getProfile, getUserInfo, updUserInfo, updUserPhoto }

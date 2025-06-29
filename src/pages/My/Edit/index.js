@@ -4,7 +4,7 @@ import NavBar from '@/components/NavBar'
 import styles from './index.module.scss'
 import dayjs from 'dayjs'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserInfo, updUserInfo } from '@/store/actions/profile'
+import { getUserInfo, updUserInfo, updUserPhoto } from '@/store/actions/profile'
 import classNames from 'classnames'
 import EditInput from './EditInput'
 import EditList from './EditList'
@@ -22,7 +22,7 @@ export default function ProfileEdit() {
       {
         title: '本地选择',
         onClick: () => {
-          console.log('本地选择');
+            fileRef.current.click();
         }
       }
     ],
@@ -53,6 +53,7 @@ export default function ProfileEdit() {
     });
 
     const containerRef = useRef(null);
+    const fileRef = useRef(null);
     const dispatch = useDispatch();
     // 避免返回undefined
     const userInfo = useSelector((state) => state.profile?.profile || {});
@@ -91,6 +92,29 @@ export default function ProfileEdit() {
                 duration: 1000,
                 position: 'bottom'
             });
+        }
+
+    }
+
+    const updFile = async (e) => {
+        const file = e.target.files[0];
+        const fd = new FormData();
+        fd.append('photo', file)
+        try{
+            const res = await dispatch(updUserPhoto(fd));
+            Toast.show({
+                icon: 'success',
+                content: res.message,
+                duration: 1000
+            });
+        }catch(e){
+            Toast.show({
+                content: e.message,
+                duration: 1000,
+                position: 'bottom'
+            });
+        }finally{
+            setVisibleOfPopBottom({...visibleOfPopBottom, isVisible:false})
         }
 
     }
@@ -142,6 +166,7 @@ export default function ProfileEdit() {
                             />
                         </List>
                     </div>
+                    <input type='file' style={{display:'none'}} ref={fileRef} onChange={updFile}></input>
                     {/* 底部栏：退出登录按钮 */}
                     <div className="logout">
                         <button className="btn">退出登录</button>
