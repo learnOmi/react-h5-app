@@ -1,7 +1,5 @@
 import request from '@/utils/request'
 import PROFILE_TYPE from '../action_types/profile'
-import { data } from 'react-router-dom'
-import { type } from '@testing-library/user-event/dist/type'
 
 const saveProfile = (data) => {
     return {
@@ -20,7 +18,7 @@ const saveUserInfo = (data) => {
 const getProfile = () => {
     return async dispatch => {
         const res = await request.get('/user');
-        if (res) {
+        if (res.data) {
             dispatch(saveProfile(res.data));
         }
     }
@@ -29,7 +27,7 @@ const getProfile = () => {
 const getUserInfo = () => {
     return async dispatch => {
         const res = await request.get('/user/profile');
-        if (res) {
+        if (res.data) {
             dispatch(saveUserInfo(res.data));
         }
     }
@@ -44,8 +42,10 @@ const updReduxUserInfo = (params) => {
 
 const updUserInfo = (params) => {
     return async dispatch => {
-
-        dispatch(updReduxUserInfo(params))
+        const res = await request.patch('/user/profile', params)
+        if(res.message === 'OK'){
+            dispatch(updReduxUserInfo(params));
+        }
     }
 }
 

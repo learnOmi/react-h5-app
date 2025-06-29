@@ -37,6 +37,27 @@ export default function ProfileEdit() {
         fetchUserInfo();
     }, [dispatch]);
 
+    const onCommit = async (type, value)=>{
+        try{
+            setVisibleOfPop({...visibleOfPop, isVisible: !visibleOfPop.isVisible});
+            Toast.show({
+                type: 'info',
+                content: '已提交！',
+                duration: 1000
+            });
+            await dispatch(updUserInfo({
+                [type]: value
+            }));
+        }catch(e){
+            Toast.show({
+                content: e.message,
+                duration: 1000,
+                position: 'bottom'
+            });
+        }
+
+    }
+
     return (
         <div className={styles.root} ref={containerRef}>
             <div className='content'>
@@ -99,7 +120,15 @@ export default function ProfileEdit() {
                 // 从而能够让 index.module.scss 中的 .adm-popup-body 样式生效
                 getContainer={containerRef.current}
             >
-                <EditInput type={visibleOfPop.type} onLeftArrowClick={()=>{setVisibleOfPop({...visibleOfPop,isVisible:!visibleOfPop.isVisible});}}/>
+                {
+                    // 防止EditInput直接随着父组件被加载出来
+                    visibleOfPop.isVisible && 
+                    <EditInput type={visibleOfPop.type} 
+                        onLeftArrowClick={()=>{setVisibleOfPop({...visibleOfPop, isVisible:!visibleOfPop.isVisible});}}
+                        onCommit={onCommit}
+                    />
+
+                }
             </Popup>
         </div>
     )

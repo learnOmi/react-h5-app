@@ -21,11 +21,15 @@ export default function reducer(state = initValues, actions){
     }
 
     if(type === PROFILE_TYPE.UPD_REDUX_USERINFO){
-        const { profile } = state;
-        state.profile = {
-            ...profile,
-            ...payload
-        };
+        const { profile:curProfile } = state;
+        return{
+            ...state,
+            profile:{
+                ...curProfile,
+                ...payload
+            }
+        }
+ 
     }
 
     return state;
