@@ -22,9 +22,9 @@ export default function EditInput({ onLeftArrowClick, type, onCommit }) {
             <div className='content-box'>
                 {
                     type === 'name' ?
-                        <Input className='input-wrap' value={value} onChange={(e)=>setValue(e.target.value)}></Input>
+                        <Input autoFocus={true} className='input-wrap' value={value} onChange={(e)=>setValue(e.target.value)}></Input>
                         :
-                        <TextArea placeholder='请输入简介' value={value} onChange={setValue}></TextArea>
+                        <TextArea autoFocus={true} placeholder='请输入简介' value={value} onChange={setValue}></TextArea>
                 }
             </div>
         </div>
