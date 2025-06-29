@@ -7,11 +7,47 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserInfo, updUserInfo } from '@/store/actions/profile'
 import classNames from 'classnames'
 import EditInput from './EditInput'
+import EditList from './EditList'
 
 
 export default function ProfileEdit() {
+    const editList = {
+         photo: [
+      {
+        title: '拍照',
+        onClick: () => {
+          console.log('拍照');
+        }
+      },
+      {
+        title: '本地选择',
+        onClick: () => {
+          console.log('本地选择');
+        }
+      }
+    ],
+    gender: [
+      {
+        title: '男',
+        onClick: () => {
+          onCommit('gender', 0)
+        }
+      },
+      {
+        title: '女',
+        onClick: () => {
+          onCommit('gender', 1)
+        }
+      }
+    ]
+    };
+
     const [visibleOfDate, setVisibleOfDate] = useState(false);
-    const [visibleOfPop, setVisibleOfPop] = useState({
+    const [visibleOfPopRight, setVisibleOfPopRight] = useState({
+        isVisible: false,
+        type: ''
+    });
+    const [visibleOfPopBottom, setVisibleOfPopBottom] = useState({
         isVisible: false,
         type: ''
     });
@@ -39,15 +75,16 @@ export default function ProfileEdit() {
 
     const onCommit = async (type, value)=>{
         try{
-            setVisibleOfPop({...visibleOfPop, isVisible: !visibleOfPop.isVisible});
-            Toast.show({
-                type: 'info',
-                content: '已提交！',
-                duration: 1000
-            });
-            await dispatch(updUserInfo({
+            if(visibleOfPopRight.isVisible) setVisibleOfPopRight({...visibleOfPopRight, isVisible: !visibleOfPopRight.isVisible});
+            if(visibleOfPopBottom.isVisible) setVisibleOfPopBottom({...visibleOfPopBottom, isVisible: !visibleOfPopBottom.isVisible});
+            const res = await dispatch(updUserInfo({
                 [type]: value
             }));
+            Toast.show({
+                icon: 'success',
+                content: res.message,
+                duration: 1000
+            });
         }catch(e){
             Toast.show({
                 content: e.message,
@@ -71,23 +108,23 @@ export default function ProfileEdit() {
                                 <img src={userInfo.photo} alt="" />
                             </span>
                         }
-                            onClick={() => { }}>
+                            onClick={() => { setVisibleOfPopBottom({isVisible: !visibleOfPopBottom.isVisible, type:'photo'}) }}>
                             头像
                         </List.Item>
-                        <List.Item extra={userInfo.name} onClick={() => { setVisibleOfPop({isVisible:!visibleOfPop.isVisible, type:'name'}) }}>
+                        <List.Item extra={userInfo.name} onClick={() => { setVisibleOfPopRight({isVisible:!visibleOfPopRight.isVisible, type:'name'}) }}>
                             昵称
                         </List.Item>
                         <List.Item extra={
                             <span className={classNames('intro', { normal: !!userInfo.intro })}>{userInfo.intro ? userInfo.intro : '未填写'}</span>
                         }
-                            onClick={() => { setVisibleOfPop({isVisible:!visibleOfPop.isVisible, type:'intro'}) }}
+                            onClick={() => { setVisibleOfPopRight({isVisible:!visibleOfPopRight.isVisible, type:'intro'}) }}
                         >
                             简介
                         </List.Item>
                     </List>
                     <div className="profile-list">
                         <List>
-                            <List.Item extra={userInfo.gender === 0 ? '男' : '女'} onClick={() => { }}>
+                            <List.Item extra={userInfo.gender === 0 ? '男' : '女'} onClick={() => { setVisibleOfPopBottom({isVisible: !visibleOfPopBottom.isVisible, type:'gender'}) }}>
                                 性别
                             </List.Item>
                             <List.Item extra={dayjs(new Date(userInfo.birthday)).format('YYYY-MM-DD')}
@@ -112,7 +149,7 @@ export default function ProfileEdit() {
                 </div>
             </div>
             <Popup
-                visible={visibleOfPop.isVisible}
+                visible={visibleOfPopRight.isVisible}
                 position='right'
                 mask={false}
                 // Ant Design Mobile 的 Popup 组件默认会使用 Portal 将内容渲染到 body 元素下，而不是直接在父容器中；
@@ -122,10 +159,27 @@ export default function ProfileEdit() {
             >
                 {
                     // 防止EditInput直接随着父组件被加载出来
-                    visibleOfPop.isVisible && 
-                    <EditInput type={visibleOfPop.type} 
-                        onLeftArrowClick={()=>{setVisibleOfPop({...visibleOfPop, isVisible:!visibleOfPop.isVisible});}}
+                    visibleOfPopRight.isVisible && 
+                    <EditInput type={visibleOfPopRight.type} 
+                        onLeftArrowClick={()=>{setVisibleOfPopRight({...visibleOfPopRight, isVisible:!visibleOfPopRight.isVisible});}}
                         onCommit={onCommit}
+                    />
+
+                }
+            </Popup>
+            <Popup
+                visible={visibleOfPopBottom.isVisible}
+                position='bottom'
+                onMaskClick={()=>setVisibleOfPopBottom({...visibleOfPopBottom, isVisible: false})}
+                // Ant Design Mobile 的 Popup 组件默认会使用 Portal 将内容渲染到 body 元素下，而不是直接在父容器中；
+                // 通过设置这个属性，Popup 内容将渲染在指定的 DOM 元素内部，而不是默认的 body 上；
+                // 从而能够让 index.module.scss 中的 .adm-popup-body 样式生效
+                getContainer={containerRef.current}
+            >
+                {
+                    // 防止EditInput直接随着父组件被加载出来
+                    visibleOfPopBottom.isVisible && 
+                    <EditList type={visibleOfPopBottom.type} config={editList} onCancel={()=>setVisibleOfPopBottom({...visibleOfPopBottom, isVisible: false})}
                     />
 
                 }

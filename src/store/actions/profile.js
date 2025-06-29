@@ -45,6 +45,7 @@ const updUserInfo = (params) => {
         const res = await request.patch('/user/profile', params)
         if(res.message === 'OK'){
             dispatch(updReduxUserInfo(params));
+            return res;
         }
     }
 }
