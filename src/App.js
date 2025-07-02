@@ -8,6 +8,7 @@ const Home = React.lazy(()=> import(`@/pages/Home`));
 const My = React.lazy(()=> import(`@/pages/My`));
 const Video = React.lazy(()=> import(`@/pages/Video`));
 const ProfileEdit = React.lazy(() => import(`@/pages/My/Edit`));
+const ProfileChat = React.lazy(() => import(`@/pages/My/Chat`));
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           </Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/my/profile-edit" element={<ProfileEdit />}></Route>
+          <Route path="/my/chat" element={<ProfileChat />}></Route>
         </Routes>
       </Suspense>
     </BrowserRouter>

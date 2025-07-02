@@ -1,5 +1,5 @@
 import Icon from '@/components/Icon'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './index.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
@@ -8,6 +8,7 @@ import { Toast } from 'antd-mobile'
 
 
 const Profile = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.profile.user);
   useEffect(()=>{
@@ -95,7 +96,7 @@ const Profile = () => {
             <Icon type="icon-filled_info_circle" />
             <div>用户反馈</div>
           </div>
-          <div className="service-item">
+          <div className="service-item" onClick={()=>navigate('/my/chat')}>
             <Icon type="icon-line_nianjin" />
             <div>小智同学</div>
           </div>
