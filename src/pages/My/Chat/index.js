@@ -1,17 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.scss'
 import NavBar from '@/components/NavBar'
 import Icon from '@/components/Icon'
 import Input from '@/components/Input'
+import io from 'socket.io-client'
 import { useSelector } from 'react-redux'
+import { getToken } from '@/utils/storage'
 
 export default function Chat() {
-    const messages = [
+    const [messages, setMessages] = useState([
         { type: 'robot', text: 'Hi~' },
         { type: 'user', text: 'Hello~' }
-    ];
+    ]);
 
     const photo = useSelector(state => state.profile.user.photo || '');
+
+    useEffect(() => {
+        const cli = io('http://geek.itheima.net',
+            {
+                query: {
+                    token: getToken().token,
+                },
+                transports: ['websocket']
+            }
+        );
+
+        cli.on('connect', () => {
+            setMessages(mes => {
+                return [
+                    ...mes,
+                    { type:'robot', text:'请问有什么需要帮助？' }
+                ]
+            })
+        });
+
+        return () => {
+            cli.close();
+        }
+    }, []);
 
     return (
         <div className={styles.root}>
