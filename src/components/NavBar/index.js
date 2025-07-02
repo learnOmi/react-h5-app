@@ -1,8 +1,9 @@
 import Icon from "@/components/Icon";
 import styles from './index.module.scss';
 import { useNavigate } from "react-router-dom";
+import classNames from 'classnames'
  
-function NavBar({children, onLeftArrowClick, extra}) {
+function NavBar({className, children, onLeftArrowClick, extra}) {
     const navigate = useNavigate();
     const back = () => {
         if(onLeftArrowClick){
@@ -17,7 +18,7 @@ function NavBar({children, onLeftArrowClick, extra}) {
     }
 
     return (
-        <div className={styles.root}>
+        <div className={classNames(styles.root, className)}>
             <div className="left">
                 <Icon type='icon-line_chevron_left' onClick={back} />
             </div>

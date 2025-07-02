@@ -3,8 +3,16 @@ import styles from './index.module.scss'
 import NavBar from '@/components/NavBar'
 import Icon from '@/components/Icon'
 import Input from '@/components/Input'
+import { useSelector } from 'react-redux'
 
 export default function Chat() {
+    const messages = [
+        { type: 'robot', text: 'Hi~' },
+        { type: 'user', text: 'Hello~' }
+    ];
+
+    const photo = useSelector(state => state.profile.user.photo || '');
+
     return (
         <div className={styles.root}>
             {/* 顶部导航栏 */}
@@ -14,20 +22,27 @@ export default function Chat() {
 
             {/* 聊天记录列表 */}
             <div className='chat-list'>
+                {
+                    messages.map((item, index) => {
+                        if (item.type === 'robot') {
+                            return (
+                                < div className='chat-item' key={index} >
+                                    <Icon type='icon-line_nianjin' />
+                                    <div className='message'>{item.text}</div>
+                                </div>
 
-                {/* 机器人的消息 */}
-                < div className='chat-item' >
-                    <Icon type='icon-line_nianjin' />
-                    <div className='message'></div>
-                </div>
-
-                {/* 用户的消息 */}
-                <div className='chat-item user'>
-                    <img src={""} alt=''></img>
-                    <div className='message'></div>
-                </div>
-
+                            )
+                        }
+                        else return (
+                            <div className='chat-item user' key={index}>
+                                <img src={photo} alt=''></img>
+                                <div className='message'>{item.text}</div>
+                            </div>
+                        )
+                    })
+                }
             </div>
+
             {/* 底部消息输入框 */}
             <div className='input-footer'>
                 <Input
