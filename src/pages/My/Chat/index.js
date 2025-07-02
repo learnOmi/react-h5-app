@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import NavBar from '@/components/NavBar'
 import Icon from '@/components/Icon'
@@ -12,8 +12,28 @@ export default function Chat() {
         { type: 'robot', text: 'Hi~' },
         { type: 'user', text: 'Hello~' }
     ]);
+    const [input, setInput] = useState('');
 
     const photo = useSelector(state => state.profile.user.photo || '');
+
+    const onKeyUp = (e) => {
+        if(e.keyCode !== 13) return;
+        if(!e.target.value) return;
+
+        cliRef.current.emit("message", {
+            msg: input,
+            timestamp: Date.now()
+        });
+
+        setMessages([
+            ...messages,
+            {type:'user', text: input}
+        ]);
+
+        setInput('');
+    }
+
+    const cliRef = useRef(null);
 
     useEffect(() => {
         const cli = io('http://geek.itheima.net',
@@ -24,6 +44,8 @@ export default function Chat() {
                 transports: ['websocket']
             }
         );
+
+        cliRef.current = cli;
 
         cli.on('connect', () => {
             setMessages(mes => {
@@ -74,6 +96,9 @@ export default function Chat() {
                 <Input
                     className='no-border'
                     placeholder='请输入您的问题'
+                    value={input}
+                    onChange={(e)=>{setInput(e.target.value)}}
+                    onKeyUp={onKeyUp}
                 />
                 <Icon type='icon-line_chevron_left' />
             </div>
