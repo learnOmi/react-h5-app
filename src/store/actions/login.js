@@ -1,6 +1,8 @@
 import request from '@/utils/request'
-import { setToken } from '@/utils/storage'
+import { removeToken, setToken } from '@/utils/storage'
 import LOGIN_TYPE from '../action_types/login'
+import { data } from 'react-router-dom'
+import { type } from '@testing-library/user-event/dist/type'
 
 const sendCode = (mobile) => {
     return async () => {
@@ -31,4 +33,17 @@ const login = (params) => {
     }
 }
 
-export {sendCode, login};
+const removeReduxToken = () => {
+    return {
+        type : LOGIN_TYPE.LOGOUT
+    }
+}
+
+const logout = () => {
+    return async ( dispatch ) => {
+        removeToken();
+        dispatch(removeReduxToken());
+    }
+}
+
+export {sendCode, login, logout};

@@ -10,5 +10,10 @@ export default function reducer(state = initValues, actions){
     if(type === LOGIN_TYPE.LOGIN_TOKEN){
         return payload;
     }
+
+    if(type === LOGIN_TYPE.LOGOUT){
+        return {}
+    }
+
     return state;
 }

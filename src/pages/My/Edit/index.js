@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { DatePicker, List, Toast, Popup } from 'antd-mobile'
+import { DatePicker, List, Toast, Popup, Modal } from 'antd-mobile'
 import NavBar from '@/components/NavBar'
 import styles from './index.module.scss'
 import dayjs from 'dayjs'
@@ -8,6 +8,8 @@ import { getUserInfo, updUserInfo, updUserPhoto } from '@/store/actions/profile'
 import classNames from 'classnames'
 import EditInput from './EditInput'
 import EditList from './EditList'
+import { logout } from '@/store/actions/login'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function ProfileEdit() {
@@ -52,6 +54,7 @@ export default function ProfileEdit() {
         type: ''
     });
 
+    const navigate = useNavigate();
     const containerRef = useRef(null);
     const fileRef = useRef(null);
     const dispatch = useDispatch();
@@ -78,6 +81,7 @@ export default function ProfileEdit() {
         try{
             if(visibleOfPopRight.isVisible) setVisibleOfPopRight({...visibleOfPopRight, isVisible: !visibleOfPopRight.isVisible});
             if(visibleOfPopBottom.isVisible) setVisibleOfPopBottom({...visibleOfPopBottom, isVisible: !visibleOfPopBottom.isVisible});
+            if(visibleOfDate.isVisible) setVisibleOfDate({...visibleOfDate, isVisible: !visibleOfDate.isVisible});
             const res = await dispatch(updUserInfo({
                 [type]: value
             }));
@@ -117,6 +121,17 @@ export default function ProfileEdit() {
             setVisibleOfPopBottom({...visibleOfPopBottom, isVisible:false})
         }
 
+    }
+
+    const logOut = () => {
+        Modal.confirm({
+            title : "温馨提示",
+            content : "确认退出？",
+            onConfirm : () => {
+                dispatch(logout());
+                navigate('/login');
+            }
+        })
     }
 
     return (
@@ -162,13 +177,13 @@ export default function ProfileEdit() {
                                 min={new Date(1900, 1, 1, 0, 0, 0)}
                                 max={new Date()}
                                 onCancel={() => setVisibleOfDate(!visibleOfDate)}
-                                onConfirm={(date) => { dispatch(updUserInfo({ birthday: dayjs(new Date(date)).format('YYYY-MM-DD') })); setVisibleOfDate(!visibleOfDate) }}
+                                onConfirm={(date) => { onCommit('birthday', dayjs(new Date(date)).format('YYYY-MM-DD')) }}
                             />
                         </List>
                     </div>
                     <input type='file' style={{display:'none'}} ref={fileRef} onChange={updFile}></input>
                     {/* 底部栏：退出登录按钮 */}
-                    <div className="logout">
+                    <div className="logout" onClick={logOut}>
                         <button className="btn">退出登录</button>
                     </div>
                 </div>
