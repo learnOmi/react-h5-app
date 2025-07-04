@@ -1,5 +1,8 @@
 import React, { Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom"; 
+import { Routes, Route } from "react-router-dom"; 
+import AuthRoute from "./components/AuthRoute";
+import { HistoryRouter } from "./utils/history";
+import { history } from "./utils/history";
 //  动态导入（import()）要求路径必须是静态字符串; Webpack 在构建时无法解析变量或非字面量路径中的别名
 const Laoyout = React.lazy(()=> import(`@/pages/Layout`));
 const Login = React.lazy(()=> import(`@/pages/Login`));
@@ -13,7 +16,7 @@ const ProfileChat = React.lazy(() => import(`@/pages/My/Chat`));
 
 function App() {
   return (
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Laoyout />}>
@@ -24,11 +27,11 @@ function App() {
             <Route path="my" element={<My />}></Route>
           </Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/my/profile-edit" element={<ProfileEdit />}></Route>
-          <Route path="/my/chat" element={<ProfileChat />}></Route>
+          <Route path="/my/profile-edit" element={<AuthRoute><ProfileEdit /></AuthRoute>}></Route>
+          <Route path="/my/chat" element={<AuthRoute><ProfileChat /></AuthRoute>}></Route>
         </Routes>
       </Suspense>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 

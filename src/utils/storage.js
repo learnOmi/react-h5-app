@@ -36,7 +36,7 @@ const removeToken = () => {
  * @returns {boolean} true: token存在，false: token不存在
  */
 const hasToken = () => {
-  return !!getToken();
+  return !!getToken().token;
 }
 
 export {setToken,getToken,removeToken,hasToken};

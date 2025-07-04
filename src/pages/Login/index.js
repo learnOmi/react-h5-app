@@ -8,9 +8,10 @@ import { login, sendCode } from "@/store/actions/login";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { Toast } from "antd-mobile";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [time, setTime] = useState(0);
   // 全局变量timerRef的方式会导致同一个组件多次渲染时，所有的同一个组件多次渲染的定时器都受到影响
@@ -71,7 +72,8 @@ export default function Login() {
           content: 'login successfully!',
           duration: 1000 
         });
-        navigate('/home');
+        const from = location.state?.from || '/home';
+        navigate(from);
       }catch(e){
         Toast.show({
           content: e.message,
