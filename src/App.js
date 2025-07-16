@@ -12,6 +12,7 @@ const My = React.lazy(()=> import(`@/pages/My`));
 const Video = React.lazy(()=> import(`@/pages/Video`));
 const ProfileEdit = React.lazy(() => import(`@/pages/My/Edit`));
 const ProfileChat = React.lazy(() => import(`@/pages/My/Chat`));
+const NotFound = React.lazy(() => import(`@/pages/NotFound`));
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/my/profile-edit" element={<AuthRoute><ProfileEdit /></AuthRoute>}></Route>
           <Route path="/my/chat" element={<AuthRoute><ProfileChat /></AuthRoute>}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </Suspense>
     </HistoryRouter>
