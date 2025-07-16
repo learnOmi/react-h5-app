@@ -1,8 +1,6 @@
 import request from '@/utils/request'
 import { removeToken, setToken } from '@/utils/storage'
 import LOGIN_TYPE from '../action_types/login'
-import { data } from 'react-router-dom'
-import { type } from '@testing-library/user-event/dist/type'
 
 const sendCode = (mobile) => {
     return async () => {
@@ -46,4 +44,4 @@ const logout = () => {
     }
 }
 
-export {sendCode, login, logout};
+export {sendCode, login, logout, saveToke};

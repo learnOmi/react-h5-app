@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { Toast } from "antd-mobile";
-import { getToken, hasToken } from './storage';
+import { getToken, hasToken, setToken } from './storage';
 import { history } from './history';
+import store from '@/store';
+import { logout, saveToke } from '@/store/actions/login';
+
+const baseURL = 'http://geek.itheima.net/v1_0';
 
 const service = axios.create({
-    baseURL: 'http://geek.itheima.net/v1_0',
+    baseURL: baseURL,
     timeout: 5000
 });
 
@@ -50,16 +54,49 @@ service.interceptors.response.use(
     response => {
         return response.data;
     },
-    error => {
+    async error => {
         const { refresh_token } = getToken();
-        const mes = error?.response?.data?.message;
-        const status = error?.response?.status;
+        const { response, config } = error;
+        const mes = response?.data?.message;
+        const status = response?.status;
         if (status && status === 401 && refresh_token) {
-            Toast.show({
-                content: mes,
-                icon: 'fail',
-                duration: 1000
-            });
+            try {
+                // 重新获取token
+                const res = await axios.post({
+                    method: 'put',
+                    url: baseURL + '/authorizations',
+                    headers: {
+                        Authorization: `Bearer ${refresh_token}`
+                    }
+                });
+                
+                const tokenInfo = {
+                    token: res.data.data.token,
+                    refresh_token: refresh_token
+                };
+                // redux外存储token到redux
+                store.dispatch(saveToke(tokenInfo));
+                // 存储token到本地
+                setToken(tokenInfo);
+
+                // 重新发送请求
+                return service(config);
+                
+            } catch (error) {
+                Toast.show({
+                    content: mes,
+                    icon: 'fail',
+                    duration: 1000
+                });
+
+                store.dispatch(logout());
+                history.push('/login', {
+                    from: history.location.pathname
+                });
+                
+                return Promise.reject(error);
+            }
+            
         } else if(status && status === 401 && !refresh_token){
             Toast.show({
                 content: mes,
