@@ -26,6 +26,20 @@ export const getChannelList = () => {
     }
 }
 
+export const getAllChannels = ()=> {
+    return async dispatch => {
+        const res = await request.get('/channels');
+        dispatch(saveAllChannels(res.data.channels));
+    }
+}
+
+export const saveAllChannels = (data) => {
+    return{
+        type: HOMETYPES.SAVE_ALL_CHANNELS,
+        payload: data
+    }
+}
+
 export const saveChannels = (data) => {
     return {
         type: HOMETYPES.SAVE_CHANNELS,
