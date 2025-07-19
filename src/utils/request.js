@@ -62,7 +62,7 @@ service.interceptors.response.use(
         if (status && status === 401 && refresh_token) {
             try {
                 // 重新获取token
-                const res = await axios.post({
+                const res = await axios({
                     method: 'put',
                     url: baseURL + '/authorizations',
                     headers: {
