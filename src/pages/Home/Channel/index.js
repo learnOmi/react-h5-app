@@ -33,6 +33,7 @@ const Channels = ({ onClose, index, onChange }) => {
                   selected: index === i
                 })}
                   key={item.id}
+                  onClick={() => {onChange(i); onClose()}}
                 >
                   {item.name}
                 </span>

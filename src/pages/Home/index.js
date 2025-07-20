@@ -7,10 +7,10 @@ import { Toast } from 'antd-mobile';
 import Icon from '@/components/Icon';
 import { Popup } from 'antd-mobile';
 import Channels from './Channel';
-import { set } from 'zod';
 
 export default function Home() {
   const [isChlOpen, setChlOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
   const dispatch = useDispatch();
   const tabs = useSelector(state => state.home.userChannels || []);
   
@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <div className={styles.root}>
-      <Tabs tabs={tabs}></Tabs>
+      <Tabs tabs={tabs} index={activeTab} onChange={(e) => setActiveTab(e)}></Tabs>
             {/* 频道 Tab栏右侧的俩个图标 */}
       <div className='tabs-opration'>
         <Icon type="icon-sousuo" />
@@ -44,7 +44,7 @@ export default function Home() {
         onClose={()=>setChlOpen(!isChlOpen)}
         bodyStyle={{width: '100vw'}}
       >
-        { isChlOpen && <Channels onClose={()=>setChlOpen(!isChlOpen)}></Channels>}
+        { isChlOpen && <Channels onClose={()=>setChlOpen(!isChlOpen)} index={activeTab} onChange={(e) => setActiveTab(e)}></Channels>}
       </Popup>
     </div>
   )
