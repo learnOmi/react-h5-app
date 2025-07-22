@@ -4,7 +4,7 @@ import styles from './index.module.scss'
 import { differenceBy } from "lodash"
 import classNames from "classnames"
 import { useState } from "react"
-import { delChannel } from "@/store/actions/home"
+import { delChannel, addChannel } from "@/store/actions/home"
 import { Toast } from "antd-mobile"
 
 const Channels = ({ onClose, index, onChange }) => {
@@ -41,6 +41,16 @@ const Channels = ({ onClose, index, onChange }) => {
     if(i<index) {
       onChange(index - 1);
     } 
+  }
+
+  const add = async (channel) => {
+    // console.log(channel);
+    await dispatch(addChannel(channel))
+    Toast.show({
+      content: '添加成功',
+      icon: 'success',
+      duration: 1000
+    });
   }
 
   return (
@@ -89,13 +99,15 @@ const Channels = ({ onClose, index, onChange }) => {
         <div className="cahnnel-item">
           <div className="channel-item-header">
             <span className="channel-item-title">频道推荐</span>
+            <span className="channel-item-title-extra">点击添加频道</span>
           </div>
           <div className="channel-list">
             {
               recommendChannels.map((item) => (
                 <span 
-                key={item.id} 
-                className='channel-list-item'
+                  key={item.id} 
+                  className='channel-list-item'
+                  onClick={()=>add(item)}
                 >
                  {item.name}
                 </span>
