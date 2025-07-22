@@ -7,6 +7,7 @@ import { Toast } from 'antd-mobile';
 import Icon from '@/components/Icon';
 import { Popup } from 'antd-mobile';
 import Channels from './Channel';
+import ArticleList from './Articles';
 
 export default function Home() {
   const [isChlOpen, setChlOpen] = useState(false);
@@ -29,7 +30,15 @@ export default function Home() {
 
   return (
     <div className={styles.root}>
-      <Tabs tabs={tabs} index={activeTab} onChange={(e) => setActiveTab(e)}></Tabs>
+      <Tabs tabs={tabs} index={activeTab} onChange={(e) => setActiveTab(e)}>
+        {
+          tabs.map(item => {
+            return (
+              <ArticleList key={item.id}></ArticleList>
+            )
+          })
+        }
+      </Tabs>
             {/* 频道 Tab栏右侧的俩个图标 */}
       <div className='tabs-opration'>
         <Icon type="icon-sousuo" />
