@@ -90,3 +90,31 @@ export const addChannel = (channel) => {
     }
   }
 }
+
+// 获取文章列表数据
+export const getArticleList = (channelId,timestamp) => {
+  return async dispatch => {
+    const res = await request({
+      method:'get',
+      url:'/articles',
+      params:{
+        timestamp:timestamp,
+        channel_id:channelId,
+      }
+    });
+    dispatch(
+      setArticleList({
+        channelId,
+        timestamp:timestamp,
+        list:res.data.results,
+      })
+    );
+  }
+}
+
+export const setArticleList = (payload) => {
+  return {
+    type:HOMETYPES.SAVE_ARTICLES,
+    payload
+  }
+}

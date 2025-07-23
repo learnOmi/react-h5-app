@@ -83,7 +83,7 @@ const Channels = ({ onClose, index, onChange }) => {
                   selected: index === i
                 })}
                   key={item.id}
-                  onClick={changeChannel}
+                  onClick={()=>changeChannel(i)}
                 >
                   {item.name}
                   {item.id !== 0 && (

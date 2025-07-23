@@ -30,11 +30,11 @@ export default function Home() {
 
   return (
     <div className={styles.root}>
-      <Tabs tabs={tabs} index={activeTab} onChange={(e) => setActiveTab(e)}>
+      <Tabs tabs={tabs} index={activeTab} onChange={(e) => {setActiveTab(e)}}>
         {
           tabs.map(item => {
             return (
-              <ArticleList key={item.id}></ArticleList>
+              <ArticleList key={item.id} channelId={item.id} activeId={tabs[activeTab].id}></ArticleList>
             )
           })
         }
