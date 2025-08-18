@@ -19,14 +19,14 @@ export default function homeReducer(state = initProps, action) {
                 allChannels: action.payload
             }
         case HOMETYPES.SAVE_ARTICLES:
-            const { list, timestamp, channelId } = action.payload;
+            const { list, timestamp, channelId, loadMore } = action.payload;
             return {
                 ...state,
                 articles: {
                     ...state.articles,
                     [channelId]: {
                         timestamp: timestamp,
-                        list: list
+                        list: loadMore ? [...state.articles[channelId].list, ...list] : list
                     }
                 }
             }
