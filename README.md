@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# Simple Articles Subscribe App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+The Simple Articles Subscribe App is a mobile-first React application (H5) designed for article browsing and subscription management. Built with modern web technologies, this application provides users with a seamless experience to discover, read, and manage article subscriptions across different channels.
 
-In the project directory, you can run:
+## What is the Simple Articles Subscribe App?
 
-### `npm start`
+This application is a content aggregation platform that allows users to browse articles from various channels, subscribe to their preferred content categories, and enjoy a personalized reading experience. The app is specifically optimized for mobile devices (H5), ensuring a responsive and touch-friendly interface that works well across different screen sizes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The application features a clean, intuitive design with a bottom navigation bar for easy access to different sections: Home, Q&A, Videos, and Personal Profile. The core functionality revolves around the article subscription system, where users can customize their content channels and enjoy an infinite scrolling reading experience with pull-to-refresh capabilities.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Key Features
 
-### `npm test`
+### Article Subscription System
+The app's centerpiece is its article subscription system, which allows users to:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Browse articles from multiple channels
+- Customize their channel subscriptions
+- Enjoy infinite scrolling with pull-to-refresh functionality
+- View articles with different layout types (text-only, single image, or multiple images)
 
-### `npm run build`
+### User Authentication
+The application includes a robust authentication system with:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Secure login and logout functionality
+- Token-based authentication with automatic token refresh
+- Protected routes for user-specific features
+- Persistent login state across sessions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Mobile-Optimized Interface
+Built with mobile users in mind, the app features:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Responsive design that adapts to different screen sizes
+- Touch-friendly navigation with a bottom tab bar
+- Optimized loading states and smooth transitions
+- Clean, modern UI using Ant Design Mobile components
 
-### `npm run eject`
+## Technology Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The application is built using a modern technology stack that ensures performance, scalability, and maintainability:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| Frontend Framework | React 19.1.0 | Core UI framework |
+| State Management | Redux Toolkit | Centralized state management |
+| Routing | React Router DOM 7.6.2 | Navigation and routing |
+| UI Components | Ant Design Mobile 5.39.0 | Mobile-optimized UI components |
+| HTTP Client | Axios 1.10.0 | API communication |
+| Form Handling | Formik 2.4.6 + Yup/Zod | Form validation and management |
+| Styling | SCSS | Component styling |
+| Build Tool | Create React App + react-app-rewired | Build and development environment |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Application Architecture
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The application follows a well-structured architecture that separates concerns and promotes maintainability:
 
-## Learn More
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Components    │ ←→ │   Redux Store    │ ←→ │   API Layer     │
+│                 │    │                  │    │                 │
+│ - UI Components │    │ - State Management│    │ - Axios Client  │
+│ - Pages         │    │ - Actions        │    │ - Authentication│
+│ - Layouts       │    │ - Reducers       │    │ - Error Handling│
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                        │                        │
+         └────────────────────────┼────────────────────────┘
+                                  ↓
+                         ┌─────────────────┐
+                         │   Mobile H5     │
+                         │   Application   │
+                         └─────────────────┘
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The application uses a centralized Redux store for state management, with actions and reducers organized in a modular structure. The API layer is abstracted through a custom request utility that handles authentication, token refresh, and error handling.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Getting Started
 
-### Code Splitting
+To get started with the Simple Articles Subscribe App, you'll need to:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. **Clone the repository**
+2. **Install dependencies** with `npm install`
+3. **Start the development server** with `npm start`
+4. **Open http://localhost:3000** in your browser
 
-### Analyzing the Bundle Size
+The application will load with the Home screen, where you can browse articles from different channels. You can customize your channel subscriptions by clicking the add icon in the top right corner.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+> **Note:** This application uses custom webpack configurations through `react-app-rewired` and includes patches for certain dependencies. Make sure to run `npm install` and `npx patch-package` after cloning to ensure all dependencies are properly installed and patched.
 
-### Making a Progressive Web App
+## Next Steps
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+After getting the application running, you might want to:
 
-### Advanced Configuration
+- Explore the different sections (Home, Q&A, Videos, My)
+- Try customizing your channel subscriptions
+- Test the pull-to-refresh and infinite scroll features
+- Check out the authentication flow by logging in and out
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For more detailed information about specific features and implementation details, refer to the other documentation sections in this series.
